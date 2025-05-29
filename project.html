@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alzheimer's Disease Detection</title>
+</head>
+<body>
+    <h1>Alzheimer's Disease Detection</h1>
+    <form id="upload-form" enctype="multipart/form-data">
+        <label for="file">Upload Patient Data (CSV):</label>
+        <input type="file" id="file" name="file" accept=".csv" required>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="result"></div>
+    
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            let formData = new FormData();
+            let fileInput = document.getElementById('file');
+            formData.append('file', fileInput.files[0]);
+
+            fetch('/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerHTML = '<h2>Prediction Result:</h2><p>' + data.result + '</p>';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
